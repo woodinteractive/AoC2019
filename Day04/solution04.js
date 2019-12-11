@@ -1,42 +1,39 @@
-const input = `271973-785961`.split('-')
 
-function getRange(input) {
-  return input.map(n => parseInt(n))
+function isValid(password, part) {
+  let twoAdjacent = false
+  let onlyIncreasing = true
+
+  for (let i = 0; i < password.length; i++) {
+    const prevNumber = password[i - 1]
+    const currNumber = password[i]
+    const nextNumber = password[i + 1]
+    const numberAfterNext = password[i + 2]
+
+    if (part === 1) {
+      if (password[i] === password[i + 1]) twoAdjacent = true
+    } else {
+      if (prevNumber !== currNumber && currNumber === nextNumber && currNumber !== numberAfterNext) twoAdjacent = true
+    }
+
+    if (Number(password[i]) > Number(password[i + 1])) onlyIncreasing = false
+  }
+
+  return twoAdjacent && onlyIncreasing
 }
 
-// function parseStartSeq(input) {
-//   return input.map(n => {
-//     let arr = n.split('')
-//     return arr.map(i => parseInt(i))
-//   })[0]
-// }
+function findCodes(input, part) {
+  const range = input.split('-').map(Number);
 
-function explodeInt(value) {
-  return value.toString().split('').map(i => parseInt(i))
-}
+  let counter = 0;
 
-function checkMatch() {
+  for (let i = range[0]; i <= range[1]; i++) {
+    if (isValid(`${i}`, part)) {
+      counter++;
+    }
+  }
 
-}
+  return counter;
+};
 
-console.log(explodeInt(271973))
-
-// const range = getRange(input)
-// let seq = parseStartSeq(input)
-// let codes = []
-
-// for (let index = range[0]; index < range[1]; index++) {
-//   const element = array[index];
-
-// }
-
-// while (range[0] < range[1]) {
-// //   if (seq[2] < seq[1]) seq[2] = seq[1]
-// //   if (seq[3] < seq[2]) seq[3] = seq[2]
-// //   if (seq[4] < seq[3]) seq[4] = seq[3]
-// //   if (seq[5] < seq[4]) seq[5] = seq[4]
-// //   if (seq[6] < seq[5]) seq[6] = seq[5]
-
-// //   let code = seq.slice(0).join('')
-// //   codes.push(code)
-// }
+console.log('part 1', findCodes('271973-785961', 1))
+console.log('part 2', findCodes('271973-785961', 2))
